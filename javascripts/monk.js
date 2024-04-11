@@ -1,4 +1,5 @@
 import Character from "./character.js";
+import { logHtml } from "./view.js";
 //Monk
 class Monk extends Character {
   constructor(name) {
@@ -14,10 +15,14 @@ class Monk extends Character {
       }
       this.hp += healAmount;
       console.log(
-        `${this.name} utilise Heal, et se soigne de ${healAmount} points de vie.`
+        `${this.name} utilise Heal, et se soigne de ${healAmount} points de vie.`,
+      );
+      logHtml(
+        `${this.name} utilise Heal, et se soigne de ${healAmount} points de vie.`,
       );
     } else {
       console.log(`${this.name} n'as pas la mana pour lancer Heal.`);
+      logHtml(`${this.name} n'as pas la mana pour lancer Heal.`);
     }
   }
 }

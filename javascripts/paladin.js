@@ -1,4 +1,5 @@
 import Character from "./character.js";
+import { logHtml } from "./view.js";
 
 //Paladin
 class Paladin extends Character {
@@ -16,12 +17,16 @@ class Paladin extends Character {
       }
       this.hp += healAmount;
       console.log(
-        `${this.name} utilise Healing-Lightning, se soigne de ${healAmount} points de vie et inflige 4 dégâts à ${target.name}.`
+        `${this.name} utilise Healing-Lightning, se soigne de ${healAmount} points de vie et inflige 4 dégâts à ${target.name}.`,
+      );
+      logHtml(
+        `${this.name} utilise Healing-Lightning, se soigne de ${healAmount} points de vie et inflige 4 dégâts à ${target.name}.`,
       );
     } else {
       console.log(
-        `${this.name} n'as pas la mana pour lancer Healing-Lightning.`
+        `${this.name} n'as pas la mana pour lancer Healing-Lightning.`,
       );
+      logHtml(`${this.name} n'as pas la mana pour lancer Healing-Lightning.`);
     }
   }
 }

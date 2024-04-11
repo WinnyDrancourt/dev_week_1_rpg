@@ -5,6 +5,7 @@ import Berzerker from "./berzerker.js";
 import Assassin from "./assassin.js";
 import Wizard from "./wizard.js";
 import Barbarian from "./barbarian.js";
+import { logHtml } from "./view.js";
 // Game
 
 class Game {
@@ -12,6 +13,8 @@ class Game {
     this.turnLeft = 10;
     this.characters = this.createCharacters();
     this.user = this.characters[0];
+    this.isGameOver = false;
+    this.startGame();
   }
   createCharacters() {
     const characters = [];
@@ -44,6 +47,7 @@ class Game {
   //Choix de class
   chooseClass(characterClasses) {
     console.log("Choisissez votre classe :");
+
     characterClasses.forEach((charClass, index) => {
       console.log(`${index + 1}. ${charClass.name}`);
     });
@@ -65,8 +69,11 @@ class Game {
   // Logique de tours
   startTurn() {
     console.log(`Nous sommes au tour : ${11 - this.turnLeft}`);
+    logHtml(`Nous sommes au tour : ${11 - this.turnLeft}`);
+    this.characters.sort(() => Math.random() - 0.5);
     this.characters.forEach((char) => {
       if (char.status === "playing") {
+        char.reduceDamageReduction();
         if (char === this.user) {
           this.userTurn();
         } else {
@@ -78,7 +85,8 @@ class Game {
   }
 
   userTurn() {
-    console.log(`C'est vôtre tour, ${this.user.name}.`);
+    console.log(`C'est votre tour, ${this.user.name}.`);
+    logHtml(`C'est votre tour, ${this.user.name}.`);
     let choice = prompt(
       "Entrez 1 pour voir les stats, 2 pour effectuer une attaque normal et 3 pour une attaque special",
     );
@@ -91,6 +99,9 @@ class Game {
       if (target.status === "loser") {
         this.user.mana += 20;
         console.log(
+          `${this.user.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+        );
+        logHtml(
           `${this.user.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
         );
       }
@@ -109,6 +120,9 @@ class Game {
           console.log(
             `${this.user.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
           );
+          logHtml(
+            `${this.user.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+          );
         }
       }
     } else {
@@ -119,19 +133,24 @@ class Game {
 
   aiTurn(char) {
     console.log(`C'est au tour de, ${char.name}.`);
+    logHtml(`C'est au tour de, ${char.name}.`);
     let target = this.getRandomTarget(char);
 
     let executeTarget = this.characters.find(
       (char) =>
         char.status === "playing" && char !== char && char.hp < char.dmg,
     );
-    if (executeTarget.length > 0) {
-      target = executeTarget[Math.floor(Math.random() * executeTarget.length)];
+    if (executeTarget) {
+      target = executeTarget;
       console.log(`${char.name} a choisi d'executer ${target.name}`);
+      logHtml(`${char.name} a choisi d'executer ${target.name}`);
       char.dealDamage(target);
       if (target.status === "loser") {
         char.mana += 20;
         console.log(
+          `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+        );
+        logHtml(
           `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
         );
       }
@@ -140,15 +159,23 @@ class Game {
         console.log(
           `${char.name} effectue une attaque normale sur ${target.name}.`,
         );
+        logHtml(
+          `${char.name} effectue une attaque normale sur ${target.name}.`,
+        );
+
         char.dealDamage(target);
         if (target.status === "loser") {
           char.mana += 20;
           console.log(
             `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
           );
+          logHtml(
+            `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+          );
         }
       } else {
         console.log(`${char.name} effectue une attaque spéciale.`);
+        logHtml(`${char.name} effectue une attaque spéciale.`);
         if (
           char instanceof Monk ||
           char instanceof Assassin ||
@@ -160,12 +187,18 @@ class Game {
             console.log(
               `${char.name} a gagné 20 points de mana pour avoir tué ${char.name}`,
             );
+            logHtml(
+              `${char.name} a gagné 20 points de mana pour avoir tué ${char.name}`,
+            );
           }
         } else {
           if (char.specialAttack(target)) {
             if (target.status === "loser") {
               char.mana += 20;
               console.log(
+                `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+              );
+              logHtml(
                 `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
               );
             }
@@ -211,7 +244,14 @@ class Game {
   }
   // Fin de partie
   endGame() {
+    this.isGameOver = true;
     console.log("Fin du Jeu");
+    let playAgain = prompt("Voulez-vous relancer une partie ? (oui/non)");
+    if (playAgain.toLowerCase() === "oui") {
+      new Game();
+    } else {
+      console.log("Merci d'avoir joué !");
+    }
   }
 
   checkWinner() {
@@ -249,7 +289,7 @@ class Game {
         console.log(
           `${index + 1}. ${char.name} (${charClass}) : PV = ${char.hp}/${
             char.maxHp
-          }, Mana = ${char.mana}/${char.maxMana}, Dmg = ${char.dmg}, Def = ${char.reduceDmgTaken}`,
+          }, Mana = ${char.mana}/${char.maxMana}, Dmg = ${char.dmg}, Def = ${char.damageReduction}`,
         );
       } else {
         console.log(`${char.name} : Mort`);
@@ -257,14 +297,13 @@ class Game {
     });
   }
   startGame() {
-    while (this.turnLeft > 0) {
+    while (this.turnLeft > 0 && !this.isGameOver) {
       this.startTurn();
     }
   }
 }
 
-const game = new Game();
-game.startGame();
+new Game();
 
 /*  playTurn(character) {
     let target = this.getRandomTarget(character);

@@ -1,3 +1,4 @@
+import { logHtml } from "./view.js";
 // Character
 class Character {
   constructor(name, hp, mana, dmg) {
@@ -8,11 +9,12 @@ class Character {
     this.status = "playing";
     this.maxHp = hp;
     this.maxMana = mana;
-    this.reduceDmgTaken = 0;
+    this.damageReduction = 0;
+    this.damageReductionTurns = 0;
   }
   takeDamage(damage) {
-    this.hp -= damage - this.reduceDmgTaken;
-    this.reduceDmgTaken = 0;
+    let finalDmg = damage - this.getDamageReduction();
+    this.hp -= finalDmg;
     if (this.hp <= 0) {
       this.status = "loser";
     }
@@ -23,6 +25,23 @@ class Character {
     console.log(
       `${this.name} attaque ${target.name} et lui inflige ${this.dmg} points dégâts. ${target.name} lui reste ${target.hp} points de vie.`,
     );
+    logHtml(
+      `${this.name} attaque ${target.name} et lui inflige ${this.dmg} points dégâts. ${target.name} lui reste ${target.hp} points de vie.`,
+    );
+  }
+
+  applyDamageReduction(turns, amount) {
+    this.damageReduction += amount;
+    this.damageReductionTurns += turns;
+  }
+
+  reduceDamageReduction() {
+    if (this.damageReductionTurns > 0) {
+      this.damageReductionTurns--;
+    }
+  }
+  getDamageReduction() {
+    return this.damageReductionTurns > 0 ? this.damageReduction : 0;
   }
 }
 

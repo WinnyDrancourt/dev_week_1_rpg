@@ -1,4 +1,5 @@
 import Character from "./character.js";
+import { logHtml } from "./view.js";
 
 //Wizard
 class Wizard extends Character {
@@ -11,10 +12,14 @@ class Wizard extends Character {
       this.mana -= 25;
       target.takeDamage(7);
       console.log(
-        `${this.name} utilise FireBall sur ${target.name}, et inflige 7 dégâts.`
+        `${this.name} utilise FireBall pour 7 dégâts sur ${target.name}. Il lui reste ${target.hp}PV`,
+      );
+      logHtml(
+        `${this.name} utilise FireBall pour 7 dégâts sur ${target.name}. Il lui reste ${target.hp}PV`,
       );
     } else {
-      console.log(`${this.name} n'as pas la mana pour lancer Dark-Vision.`);
+      console.log(`${this.name} n'as pas la mana pour lancer FireBall.`);
+      logHtml(`${this.name} n'as pas la mana pour lancer FireBall.`);
     }
   }
 }
