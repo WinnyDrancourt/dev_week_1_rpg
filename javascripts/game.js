@@ -97,12 +97,16 @@ class Game {
       let target = this.userTarget(this.user);
       this.user.dealDamage(target);
       if (target.status === "loser") {
-        this.user.mana += 20;
+        let manaRegen = 20;
+        if (this.mana + manaRegen > this.maxMana) {
+          manaRegen = this.maxMana - this.mana;
+        }
+        this.mana += manaRegen;
         console.log(
-          `${this.user.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+          `${this.user.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
         );
         logHtml(
-          `${this.user.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+          `${this.user.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
         );
       }
     } else if (choice === "3") {
@@ -116,12 +120,16 @@ class Game {
         let target = this.userTarget(this.user);
         this.user.specialAttack(target);
         if (target.status === "loser") {
-          this.user.mana += 20;
+          let manaRegen = 20;
+          if (this.mana + manaRegen > this.maxMana) {
+            manaRegen = this.maxMana - this.mana;
+          }
+          this.mana += manaRegen;
           console.log(
-            `${this.user.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+            `${this.user.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
           );
           logHtml(
-            `${this.user.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+            `${this.user.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
           );
         }
       }
@@ -146,12 +154,16 @@ class Game {
       logHtml(`${char.name} a choisi d'executer ${target.name}`);
       char.dealDamage(target);
       if (target.status === "loser") {
-        char.mana += 20;
+        let manaRegen = 20;
+        if (char.mana + manaRegen > char.maxMana) {
+          manaRegen = char.maxMana - char.mana;
+        }
+        char.mana += manaRegen;
         console.log(
-          `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+          `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
         );
         logHtml(
-          `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+          `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
         );
       }
     } else {
@@ -165,12 +177,16 @@ class Game {
 
         char.dealDamage(target);
         if (target.status === "loser") {
-          char.mana += 20;
+          let manaRegen = 20;
+          if (char.mana + manaRegen > char.maxMana) {
+            manaRegen = char.maxMana - char.mana;
+          }
+          char.mana += manaRegen;
           console.log(
-            `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+            `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
           );
           logHtml(
-            `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+            `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
           );
         }
       } else {
@@ -183,23 +199,31 @@ class Game {
         ) {
           char.specialAttack();
           if (char.status === "loser") {
-            char.mana += 20;
+            let manaRegen = 20;
+            if (char.mana + manaRegen > char.maxMana) {
+              manaRegen = char.maxMana - char.mana;
+            }
+            char.mana += manaRegen;
             console.log(
-              `${char.name} a gagné 20 points de mana pour avoir tué ${char.name}`,
+              `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${char.name}`,
             );
             logHtml(
-              `${char.name} a gagné 20 points de mana pour avoir tué ${char.name}`,
+              `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${char.name}`,
             );
           }
         } else {
           if (char.specialAttack(target)) {
             if (target.status === "loser") {
-              char.mana += 20;
+              let manaRegen = 20;
+              if (char.mana + manaRegen > char.maxMana) {
+                manaRegen = char.maxMana - char.mana;
+              }
+              char.mana += manaRegen;
               console.log(
-                `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+                `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
               );
               logHtml(
-                `${char.name} a gagné 20 points de mana pour avoir tué ${target.name}`,
+                `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
               );
             }
           }
