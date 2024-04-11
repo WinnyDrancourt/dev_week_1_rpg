@@ -22,5 +22,16 @@ class Barbarian extends Character {
       logHtml(`${this.name} n'as pas la mana pour lancer Defense.`);
     }
   }
+  takeDamage(damage) {
+    let finalDmg = damage - this.getDamageReduction();
+    finalDmg = finalDmg < 0 ? 0 : finalDmg;
+    this.hp -= finalDmg;
+    if (this.hp <= 0) {
+      this.status = "loser";
+    }
+    if (this.damageReduction < 0) {
+      this.damageReduction = 0;
+    }
+  }
 }
 export default Barbarian;

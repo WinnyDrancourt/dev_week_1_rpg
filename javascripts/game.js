@@ -96,22 +96,11 @@ class Game {
     } else if (choice === "2") {
       let target = this.userTarget(this.user);
       this.user.dealDamage(target);
-      if (target.status === "loser") {
-        let manaRegen = 20;
-        if (this.mana + manaRegen > this.maxMana) {
-          manaRegen = this.maxMana - this.mana;
-        }
-        this.mana += manaRegen;
-        console.log(
-          `${this.user.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
-        );
-        logHtml(
-          `${this.user.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
-        );
-      }
+      this.manaExec(this.user, target);
     } else if (choice === "3") {
       if (
         this.user instanceof Monk ||
+        this.user instanceof Berzerker ||
         this.user instanceof Assassin ||
         this.user instanceof Barbarian
       ) {
@@ -119,19 +108,7 @@ class Game {
       } else {
         let target = this.userTarget(this.user);
         this.user.specialAttack(target);
-        if (target.status === "loser") {
-          let manaRegen = 20;
-          if (this.mana + manaRegen > this.maxMana) {
-            manaRegen = this.maxMana - this.mana;
-          }
-          this.mana += manaRegen;
-          console.log(
-            `${this.user.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
-          );
-          logHtml(
-            `${this.user.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
-          );
-        }
+        this.manaExec(this.user, target);
       }
     } else {
       console.log("Choix invalide, veuillez réessayer.");
@@ -153,7 +130,47 @@ class Game {
       console.log(`${char.name} a choisi d'executer ${target.name}`);
       logHtml(`${char.name} a choisi d'executer ${target.name}`);
       char.dealDamage(target);
-      if (target.status === "loser") {
+      this.manaExec(char, target);
+    } else {
+      if (Math.random() < 0.5) {
+        console.log(
+          `${char.name} effectue une attaque normale sur ${target.name}.`,
+        );
+        logHtml(
+          `${char.name} effectue une attaque normale sur ${target.name}.`,
+        );
+
+        char.dealDamage(target);
+        this.manaExec(char, target);
+      } else {
+        console.log(`${char.name} effectue une attaque spéciale.`);
+        logHtml(`${char.name} effectue une attaque spéciale.`);
+        if (
+          char instanceof Monk ||
+          char instanceof Berzerker ||
+          char instanceof Assassin ||
+          char instanceof Barbarian
+        ) {
+          char.specialAttack();
+          this.manaExec(char, target);
+        } else {
+          if (char.specialAttack(target)) {
+            this.manaExec(char, target);
+          }
+        }
+      }
+    }
+  }
+
+  manaExec(char, target) {
+    if (target.status === "loser") {
+      if (char instanceof Berzerker) {
+        let healAmount = 5;
+        if (char.hp + healAmount > char.maxHp) {
+          healAmount = char.maxHp - char.hp;
+        }
+        char.hp += healAmount;
+      } else {
         let manaRegen = 20;
         if (char.mana + manaRegen > char.maxMana) {
           manaRegen = char.maxMana - char.mana;
@@ -165,69 +182,6 @@ class Game {
         logHtml(
           `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
         );
-      }
-    } else {
-      if (Math.random() < 0.5) {
-        console.log(
-          `${char.name} effectue une attaque normale sur ${target.name}.`,
-        );
-        logHtml(
-          `${char.name} effectue une attaque normale sur ${target.name}.`,
-        );
-
-        char.dealDamage(target);
-        if (target.status === "loser") {
-          let manaRegen = 20;
-          if (char.mana + manaRegen > char.maxMana) {
-            manaRegen = char.maxMana - char.mana;
-          }
-          char.mana += manaRegen;
-          console.log(
-            `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
-          );
-          logHtml(
-            `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
-          );
-        }
-      } else {
-        console.log(`${char.name} effectue une attaque spéciale.`);
-        logHtml(`${char.name} effectue une attaque spéciale.`);
-        if (
-          char instanceof Monk ||
-          char instanceof Assassin ||
-          char instanceof Barbarian
-        ) {
-          char.specialAttack();
-          if (char.status === "loser") {
-            let manaRegen = 20;
-            if (char.mana + manaRegen > char.maxMana) {
-              manaRegen = char.maxMana - char.mana;
-            }
-            char.mana += manaRegen;
-            console.log(
-              `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${char.name}`,
-            );
-            logHtml(
-              `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${char.name}`,
-            );
-          }
-        } else {
-          if (char.specialAttack(target)) {
-            if (target.status === "loser") {
-              let manaRegen = 20;
-              if (char.mana + manaRegen > char.maxMana) {
-                manaRegen = char.maxMana - char.mana;
-              }
-              char.mana += manaRegen;
-              console.log(
-                `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
-              );
-              logHtml(
-                `${char.name} a gagné ${manaRegen} points de mana pour avoir tué ${target.name}`,
-              );
-            }
-          }
-        }
       }
     }
   }

@@ -14,6 +14,7 @@ class Character {
   }
   takeDamage(damage) {
     let finalDmg = damage - this.getDamageReduction();
+    finalDmg = finalDmg < 0 ? 0 : finalDmg;
     this.hp -= finalDmg;
     if (this.hp <= 0) {
       this.status = "loser";

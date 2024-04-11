@@ -3,7 +3,7 @@ import { logHtml } from "./view.js";
 //Monk
 class Monk extends Character {
   constructor(name) {
-    super(name, 8, 200, 2);
+    super(name, 8, 100, 2);
   }
   //special Attack
   specialAttack() {

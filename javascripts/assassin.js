@@ -6,12 +6,13 @@ class Assassin extends Character {
   constructor(name) {
     super(name, 6, 20, 6);
     this.protectionDamage = 7;
+    this.shadowHit = false;
   }
 
   specialAttack() {
     if (this.mana >= 20) {
       this.mana -= 20;
-      this.applyDamageReduction(1, this.dmg);
+      this.shadowHit = true;
       console.log(
         `${this.name} utilise Shadow Hit, se protège lors du prochain tour.`,
       );
